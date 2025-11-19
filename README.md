@@ -1,10 +1,10 @@
-**AutoVerify KYC - AI-Powered Identity Verification**
+# **AutoVerify KYC - AI-Powered Identity Verification**
 
 AutoVerify is a next-generation KYC (Know Your Customer) solution designed to transform the onboarding process from a tedious form-filling exercise into a seamless, 60-second conversational experience.
 
 Built for the GHCI Hackathon (2025).
 
-## 🚀 **Key Features**
+## 🚀 Key Features
 
 - **Conversational Interface**: A friendly AI agent guides users through the process, replacing static forms.
 
@@ -16,7 +16,7 @@ Built for the GHCI Hackathon (2025).
 
 - **Enterprise-Grade UI**: Clean, trustworthy, and responsive design built with Tailwind CSS.
 
-## 🛠️ **Tech Stack**
+## 🛠️ Tech Stack
 
 - **Frontend**: React (Vite), Tailwind CSS
 
@@ -26,9 +26,9 @@ Built for the GHCI Hackathon (2025).
 
 - **Deployment**: Firebase Hosting / Vercel (Optional)
 
-## 📂 **Project Structure**
+## 📂 Project Structure
 
-autoverify-kyc/
+`autoverify-kyc/
 ├── client/                 # React Frontend
 │   ├── src/
 │   │   ├── components/     # ChatWindow, StatusAuditWindow
@@ -36,10 +36,10 @@ autoverify-kyc/
 │   └── ...
 └── functions/              # Serverless Backend
     ├── index.js            # Cloud Function Entry Point
-    └── utils/              # OCR Parsing Logic
+    └── utils/              # OCR Parsing Logic`
 
 
-## ⚡️ **How to Run Locally**
+## ⚡️ How to Run Locally
 
 **Prerequisites**
 
@@ -49,30 +49,30 @@ autoverify-kyc/
 
 1. **Setup Backend (Firebase Functions)**
 
-cd functions
+`cd functions
 npm install
 # Set up your firebase project credentials
 firebase init
 # Deploy the function to get your API URL
-npm run deploy
+npm run deploy`
 
 
 2. **Setup Frontend (React)**
 
-cd client
-npm install
+`cd client
+npm install`
 
 
 3. **Configure Environment**
 
 Create a .env file in the client folder:
 
-VITE_API_URL=[https://your-region-project.cloudfunctions.net/extractData](https://your-region-project.cloudfunctions.net/extractData)
+`VITE_API_URL=[https://your-region-project.cloudfunctions.net/extractData](https://your-region-project.cloudfunctions.net/extractData)`
 
 
 4. **Run the App**
 
-npm run dev
+`npm run dev`
 
 
 ## 🧠 **AI & Architecture**
