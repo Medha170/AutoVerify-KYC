@@ -120,7 +120,7 @@ function parseKYCData(text) {
  * @return {boolean} True if the line contains at least one English letter.
  */
 function isEnglishLine(line) {
-  return /[a-zA-Z]/.test(line);
+  return /[a-zA-Z0-9]/.test(line);
 }
 
 module.exports = {parseKYCData};
