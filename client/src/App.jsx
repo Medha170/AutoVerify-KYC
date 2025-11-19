@@ -13,7 +13,7 @@ export default function App() {
   const [chatMessages, setChatMessages] = useState([
     { from: 'ai', text: "Welcome to AutoVerify! Say 'hi' or 'hello' to begin your 60-second verification." }
   ]);
-  const [kycStatus, setKycStatus] = useState('pending'); // 'pending', 'approved'
+  const [kycStatus, setKycStatus] = useState('pending'); // 'pending', 'approved', 'rejected'
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [extractedData, setExtractedData] = useState(null);
@@ -44,16 +44,19 @@ export default function App() {
     }, 800);
   };
 
-  // --- DAY 3 LOGIC: Handle File Upload & Call AI ---
+  // --- Handle File Upload & Call AI ---
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
+
+    // Reset state on new upload
+    setKycStatus('pending'); 
+    setExtractedData(null);
 
     setIsProcessing(true);
     addAuditLog(`User uploaded ${file.name}`);
     addAuditLog('Sending to AI for analysis...');
 
-    // Convert to Base64
     const reader = new FileReader();
     reader.readAsDataURL(file);
     
@@ -61,7 +64,6 @@ export default function App() {
       const base64Image = reader.result;
 
       try {
-        // Call our Firebase Function
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -73,32 +75,60 @@ export default function App() {
         if (result.success) {
             setExtractedData(result.data);
             addAuditLog('AI extraction successful.');
-            addAuditLog(`Detected: ${result.data.name}`);
         } else {
             addAuditLog('AI extraction failed.');
             console.error(result.error);
+            setIsProcessing(false); // Stop spinner on error
         }
       } catch (error) {
         addAuditLog('Network error connecting to AI.');
         console.error(error);
-      } finally {
-        setIsProcessing(false);
+        setIsProcessing(false); // Stop spinner on error
       }
     };
   };
 
-  // --- DAY 3 LOGIC: Auto-Approve Logic ---
+  // --- UPDATED: Strict Validation Logic ---
   useEffect(() => {
     if (extractedData && kycStatus === 'pending') {
-        // Simulate a quick risk check delay
         setTimeout(() => {
-            setKycStatus('approved');
-            addAuditLog('Risk check passed. User approved.');
-            
-            setChatMessages(prev => [...prev, { 
-                from: 'ai', 
-                text: `I've verified your ID, ${extractedData.name}. Your account is now approved!` 
-            }]);
+            // We turn off processing here because we have data
+            setIsProcessing(false);
+
+            // STRICT CHECK: Both Name AND ID Number must be detected
+            const hasName = extractedData.name !== "Not Detected";
+            const hasId = extractedData.idNumber !== "Not Detected";
+
+            if (hasName && hasId) {
+                // --- SUCCESS CASE ---
+                setKycStatus('approved');
+                addAuditLog('Risk check passed. User approved.');
+                addAuditLog(`Verified ID: ${extractedData.idNumber}`);
+                
+                setChatMessages(prev => [...prev, { 
+                    from: 'ai', 
+                    text: `Success! I've verified your ID (${extractedData.idNumber}) for ${extractedData.name}. Your account is approved.` 
+                }]);
+            } else {
+                // --- REJECTION CASE ---
+                setKycStatus('rejected');
+                addAuditLog('Risk check failed: Mandatory data missing.');
+                
+                // Determine specific error message
+                let errorMsg = "I couldn't read your document clearly.";
+                if (!hasName) {
+                    addAuditLog('Failed to detect Name.');
+                    errorMsg = "I couldn't find a valid Name on this document.";
+                } else if (!hasId) {
+                     addAuditLog('Failed to detect ID Number.');
+                     errorMsg = "I detected your name, but I couldn't find a valid ID Number.";
+                }
+
+                setChatMessages(prev => [...prev, { 
+                    from: 'ai', 
+                    text: `${errorMsg} Please upload a clearer picture of a valid ID card.` 
+                }]);
+            }
         }, 1000);
     }
   }, [extractedData, kycStatus]);

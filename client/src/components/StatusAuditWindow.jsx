@@ -23,6 +23,17 @@ export default function StatusAuditWindow({ status, auditLog, onFileUpload, isPr
         </svg>
       ),
     },
+    rejected: {
+      text: 'Verification Failed',
+      bgColor: 'bg-red-100',
+      textColor: 'text-red-800',
+      borderColor: 'border-red-300',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-red-600">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
   };
 
   const currentStatus = statusConfig[status] || statusConfig.pending;
@@ -43,8 +54,8 @@ export default function StatusAuditWindow({ status, auditLog, onFileUpload, isPr
             </span>
           </div>
 
-          {/* Upload Button Area */}
-          {status === 'pending' && (
+          {/* Upload Button Area (Show only if pending OR rejected so they can retry) */}
+          {(status === 'pending' || status === 'rejected') && (
              <div className="mt-4">
                 <label 
                   className={`flex items-center justify-center w-full px-4 py-3 rounded-lg border-2 border-dashed border-slate-300 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -60,7 +71,7 @@ export default function StatusAuditWindow({ status, auditLog, onFileUpload, isPr
                   ) : (
                     <div className="flex items-center space-x-2 text-slate-600">
                       <UploadIcon />
-                      <span>Upload ID Document</span>
+                      <span>{status === 'rejected' ? 'Try Uploading Again' : 'Upload ID Document'}</span>
                     </div>
                   )}
                   <input 
