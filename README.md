@@ -28,7 +28,8 @@ Built for the GHCI Hackathon (2025).
 
 ## 📂 Project Structure
 
-`autoverify-kyc/
+```
+autoverify-kyc/
 ├── client/                 # React Frontend
 │   ├── src/
 │   │   ├── components/     # ChatWindow, StatusAuditWindow
@@ -36,7 +37,8 @@ Built for the GHCI Hackathon (2025).
 │   └── ...
 └── functions/              # Serverless Backend
     ├── index.js            # Cloud Function Entry Point
-    └── utils/              # OCR Parsing Logic`
+    └── utils/              # OCR Parsing Logic
+```
 
 
 ## ⚡️ How to Run Locally
@@ -49,31 +51,38 @@ Built for the GHCI Hackathon (2025).
 
 1. **Setup Backend (Firebase Functions)**
 
-`cd functions
+```
+cd functions
 npm install
 # Set up your firebase project credentials
 firebase init
 # Deploy the function to get your API URL
-npm run deploy`
+npm run deploy
+```
 
 
 2. **Setup Frontend (React)**
-
-`cd client
-npm install`
+   
+```
+cd client
+npm install
+```
 
 
 3. **Configure Environment**
 
 Create a .env file in the client folder:
 
-`VITE_API_URL=[https://your-region-project.cloudfunctions.net/extractData](https://your-region-project.cloudfunctions.net/extractData)`
+```
+VITE_API_URL=[https://your-region-project.cloudfunctions.net/extractData](https://your-region-project.cloudfunctions.net/extractData)
+```
 
 
 4. **Run the App**
 
-`npm run dev`
-
+```
+npm run dev
+```
 
 ## 🧠 **AI & Architecture**
 
@@ -83,4 +92,4 @@ The system uses a hybrid architecture:
 
 2. **Security & Power**: Document processing is offloaded to a secure serverless function that leverages Google's Enterprise Vision AI for high-accuracy OCR.
 
-Built with ❤️ by Medha Shree
+Built with ❤️ by *Medha Shree*
